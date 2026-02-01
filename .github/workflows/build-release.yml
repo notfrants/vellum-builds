@@ -1,0 +1,125 @@
+name: Build and upload releases
+
+on:
+  push:
+    tags:
+      - "*"
+
+jobs:
+  build:
+    strategy:
+      matrix:
+        os:
+          [
+            "eeems/remarkable-toolchain:latest-rmpp",
+            "eeems/remarkable-toolchain:latest-rm2",
+          ]
+        include:
+          - os: "eeems/remarkable-toolchain:latest-rmpp"
+            rust_arch: aarch64-unknown-linux-gnu
+            release_arch: aarch64
+          - os: "eeems/remarkable-toolchain:latest-rm2"
+            rust_arch: armv7-unknown-linux-gnueabihf
+            release_arch: arm32
+    runs-on: ubuntu-latest
+
+    container:
+      image: ${{ matrix.os }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+        with:
+          submodules: true
+
+      - name: Build
+        shell: bash
+        run: |
+          export RUST_ARCH=${{ matrix.rust_arch }}
+          build.sh
+
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: builds-${{ matrix.release_arch }}
+          path: builds/*.tar.gz
+
+  release:
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Download build artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: ./
+
+      - name: Create release
+        uses: actions/create-release@v1
+        id: create_release_step
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          draft: false
+          prerelease: false
+          release_name: ${{ github.event.release.tag_name }}
+          tag_name: ${{ github.ref }}
+
+      - name: Upload fastfetch (arm32)
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release_step.outputs.upload_url }}
+          asset_path: builds-arm32/fastfetch.tar.gz
+          asset_name: builds-arm32.tar.gz
+          asset_content_type: application/octet-stream
+      
+      - name: Upload fastfetch (aarch64)
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release_step.outputs.upload_url }}
+          asset_path: builds-aarch64/fastfetch.tar.gz
+          asset_name: builds-aarch64.tar.gz
+          asset_content_type: application/octet-stream
+
+      - name: Upload hyfetch (arm32)
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release_step.outputs.upload_url }}
+          asset_path: builds-arm32/hyfetch.tar.gz
+          asset_name: builds-arm32.tar.gz
+          asset_content_type: application/octet-stream
+      
+      - name: Upload hyfetch (aarch64)
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release_step.outputs.upload_url }}
+          asset_path: builds-aarch64/hyfetch.tar.gz
+          asset_name: builds-aarch64.tar.gz
+          asset_content_type: application/octet-stream
+
+      - name: Upload tilem (arm32)
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release_step.outputs.upload_url }}
+          asset_path: builds-arm32/tilem.tar.gz
+          asset_name: builds-arm32.tar.gz
+          asset_content_type: application/octet-stream
+      
+      - name: Upload tilem (aarch64)
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release_step.outputs.upload_url }}
+          asset_path: builds-aarch64/tilem.tar.gz
+          asset_name: builds-aarch64.tar.gz
+          asset_content_type: application/octet-stream
