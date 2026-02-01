@@ -109,8 +109,21 @@ hyfetch() {
     git clone https://github.com/notfrants/hyfetch.git
     cd hyfetch
 
-    RUSTFLAGS="-C linker=arm-linux-gnueabihf-gcc" \
-        cargo build --target "$RUST_ARCH" --release
+    case "$RUST_ARCH" in
+        armv7-unknown-linux-gnueabihf)
+            linker=$(. /opt/codex/*/*/environment-setup-* && which "arm-remarkable-linux-gnueabi-gcc")
+            export CARGO_TARGET_ARMV7_UNKNOWN_LINUX_GNUEABIHF_LINKER=$linker
+            ;;
+        aarch64-unknown-linux-gnu)
+            linker=$(. /opt/codex/*/*/environment-setup-* && which "aarch64-remarkable-linux-gcc")
+            export CARGO_TARGET_AARCH64_UNKNOWN_LINUX_GNU_LINKER=$linker
+            ;;
+    esac
+
+    sysroot=$(. /opt/codex/*/*/environment-setup-* && echo "$SDKTARGETSYSROOT")
+    export RUSTFLAGS="-C link-args=--sysroot=$sysroot"
+
+    cargo build --release --target "$RUST_ARCH"
 
     cd ..
     mkdir -p builds/hyfetch
