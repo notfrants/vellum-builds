@@ -10,7 +10,7 @@ setup() {
     rustup target add "$RUST_ARCH"
 
     apt-get update
-    apt-get install -y git-lfs cmake python3.12-venv
+    apt-get install -y git-lfs cmake
     case "$RUST_ARCH" in
         armv7-unknown-linux-gnueabihf)
             apt-get install -y gcc-arm-linux-gnueabihf
