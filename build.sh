@@ -97,6 +97,7 @@ EOF
     cp fastfetch/LICENSE builds/fastfetch/LICENSE
     commit=$(git -C fastfetch rev-parse HEAD)
     echo "https://github.com/notfrants/fastfetch/archive/$commit.tar.gz" > builds/fastfetch/SOURCES
+    git -C fastfetch describe --tags --long --always > builds/fastfetch/VERSION
 
     rm -rf fastfetch
 
@@ -133,6 +134,7 @@ hyfetch() {
     cp hyfetch/LICENSE.md builds/hyfetch/LICENSE
     commit=$(git -C hyfetch rev-parse HEAD)
     echo "https://github.com/notfrants/hyfetch/archive/$commit.tar.gz" > builds/hyfetch/SOURCES
+    git -C hyfetch describe --tags --long --always > builds/hyfetch/VERSION
 
     rm -rf hyfetch
 
@@ -174,6 +176,7 @@ EOF
     cp rM2-stuff/LICENSE builds/tilem/LICENSE
     commit=$(git -C rM2-stuff rev-parse HEAD)
     echo "https://github.com/notfrants/rM2-stuff/archive/$commit.tar.gz" > builds/tilem/SOURCES
+    git -C rM2-stuff describe --tags --long --always > builds/tilem/VERSION
 
     rm -rf rM2-stuff
 
