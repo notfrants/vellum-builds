@@ -72,7 +72,7 @@ jobs:
         with:
           upload_url: ${{ steps.create_release_step.outputs.upload_url }}
           asset_path: builds-arm32/fastfetch.tar.gz
-          asset_name: builds-arm32.tar.gz
+          asset_name: fastfetch-arm32.tar.gz
           asset_content_type: application/octet-stream
       
       - name: Upload fastfetch (aarch64)
@@ -82,7 +82,7 @@ jobs:
         with:
           upload_url: ${{ steps.create_release_step.outputs.upload_url }}
           asset_path: builds-aarch64/fastfetch.tar.gz
-          asset_name: builds-aarch64.tar.gz
+          asset_name: fastfetch-aarch64.tar.gz
           asset_content_type: application/octet-stream
 
       - name: Upload hyfetch (arm32)
@@ -92,7 +92,7 @@ jobs:
         with:
           upload_url: ${{ steps.create_release_step.outputs.upload_url }}
           asset_path: builds-arm32/hyfetch.tar.gz
-          asset_name: builds-arm32.tar.gz
+          asset_name: hyfetch-arm32.tar.gz
           asset_content_type: application/octet-stream
       
       - name: Upload hyfetch (aarch64)
@@ -102,7 +102,7 @@ jobs:
         with:
           upload_url: ${{ steps.create_release_step.outputs.upload_url }}
           asset_path: builds-aarch64/hyfetch.tar.gz
-          asset_name: builds-aarch64.tar.gz
+          asset_name: hyfetch-aarch64.tar.gz
           asset_content_type: application/octet-stream
 
       - name: Upload tilem (arm32)
@@ -112,7 +112,7 @@ jobs:
         with:
           upload_url: ${{ steps.create_release_step.outputs.upload_url }}
           asset_path: builds-arm32/tilem.tar.gz
-          asset_name: builds-arm32.tar.gz
+          asset_name: tilem-arm32.tar.gz
           asset_content_type: application/octet-stream
       
       - name: Upload tilem (aarch64)
@@ -122,5 +122,5 @@ jobs:
         with:
           upload_url: ${{ steps.create_release_step.outputs.upload_url }}
           asset_path: builds-aarch64/tilem.tar.gz
-          asset_name: builds-aarch64.tar.gz
+          asset_name: tilem-aarch64.tar.gz
           asset_content_type: application/octet-stream
