@@ -10,7 +10,7 @@ setup() {
     rustup target add "$RUST_ARCH"
 
     apt-get update
-    apt-get install -y git-lfs cmake
+    apt-get install -y git-lfs cmake python3.12-venv
     case "$RUST_ARCH" in
         armv7-unknown-linux-gnueabihf)
             apt-get install -y gcc-arm-linux-gnueabihf
@@ -123,10 +123,14 @@ hyfetch() {
 
     cargo build --release --target "$RUST_ARCH"
 
+    cargo build --release
+    target/release/hyfetch --bpaf-complete-style-bash > hyfetch.bash
+
     cd ..
     mkdir -p builds/hyfetch
 
     cp "hyfetch/target/$RUST_ARCH/release/hyfetch" builds/hyfetch/hyfetch
+    cp hyfetch/hyfetch.bash builds/hyfetch/hyfetch.bash
 
     cp hyfetch/LICENSE.md builds/hyfetch/LICENSE
     commit=$(git -C hyfetch rev-parse HEAD)
