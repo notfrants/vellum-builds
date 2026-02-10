@@ -124,3 +124,23 @@ jobs:
           asset_path: builds-aarch64/tilem.tar.gz
           asset_name: tilem-aarch64.tar.gz
           asset_content_type: application/octet-stream
+
+      - name: Upload less (arm32)
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release_step.outputs.upload_url }}
+          asset_path: builds-arm32/less.tar.gz
+          asset_name: less-arm32.tar.gz
+          asset_content_type: application/octet-stream
+      
+      - name: Upload less (aarch64)
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release_step.outputs.upload_url }}
+          asset_path: builds-aarch64/less.tar.gz
+          asset_name: less-aarch64.tar.gz
+          asset_content_type: application/octet-stream
