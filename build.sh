@@ -186,8 +186,41 @@ EOF
     cd ../..
 }
 
+less() {
+    local version="692"
+
+    curl -Lfo less.tar.gz https://greenwoodsoftware.com/less/less-$version.tar.gz
+    mkdir -p less
+    tar --strip-components=1 -xzf less.tar.gz -C less
+    rm -f less.tar.gz
+    cd less
+
+    (
+        . /opt/codex/*/*/environment-setup-*
+
+        sh configure --host remarkable
+        make
+    )
+
+    cd ..
+    mkdir -p builds/less
+
+    cp less/less builds/less/less
+
+    cp less/LICENSE builds/less/LICENSE
+    echo "https://greenwoodsoftware.com/less/less-$version.tar.gz" > builds/less/SOURCES
+    echo $version > builds/less/VERSION
+
+    rm -rf less
+
+    cd builds/less
+    tar -czf ../less.tar.gz ./*
+    cd ../..
+}
+
 setup
 
 fastfetch
 hyfetch
 tilem
+less
