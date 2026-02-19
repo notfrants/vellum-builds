@@ -3,14 +3,17 @@
 set -eux
 
 setup() {
+    apt-get update
+    apt-get install -y git-lfs cmake
+    git lfs install
+
     curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs > install
     sh install -y
     rm -f install
     . "$HOME/.cargo/env"
     rustup target add "$RUST_ARCH"
-
-    apt-get update
-    apt-get install -y git-lfs cmake
+    export CARGO_TARGET_ARMV7_UNKNOWN_LINUX_GNUEABIHF_LINKER=arm-linux-gnueabihf-gcc
+    export CARGO_TARGET_AARCH64_UNKNOWN_LINUX_GNU_LINKER=aarch64-linux-gnu-gcc
     case "$RUST_ARCH" in
         armv7-unknown-linux-gnueabihf)
             apt-get install -y gcc-arm-linux-gnueabihf
@@ -19,7 +22,6 @@ setup() {
             apt-get install -y gcc-aarch64-linux-gnu
             ;;
     esac
-    git lfs install
 
     mkdir -p builds
 }
@@ -115,22 +117,15 @@ EOF
 }
 
 hyfetch() {    
-    git clone https://github.com/notfrants/hyfetch.git
+    git clone https://github.com/hykilpikonna/hyfetch.git
     cd hyfetch
 
-    export CARGO_TARGET_ARMV7_UNKNOWN_LINUX_GNUEABIHF_LINKER=arm-linux-gnueabihf-gcc
-    export CARGO_TARGET_AARCH64_UNKNOWN_LINUX_GNU_LINKER=aarch64-linux-gnu-gcc
-
     cargo build --release --target "$RUST_ARCH"
-
-    cargo build --release
-    target/release/hyfetch --bpaf-complete-style-bash > hyfetch.bash
 
     cd ..
     mkdir -p builds/hyfetch
 
     cp "hyfetch/target/$RUST_ARCH/release/hyfetch" builds/hyfetch/hyfetch
-    cp hyfetch/hyfetch.bash builds/hyfetch/hyfetch.bash
 
     cp hyfetch/LICENSE.md builds/hyfetch/LICENSE
     commit=$(git -C hyfetch rev-parse HEAD)
