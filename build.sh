@@ -147,6 +147,8 @@ tilem() {
     (
         . /opt/codex/*/*/environment-setup-*
 
+        export SSL_CERT_FILE=/etc/ssl/certs/ca-certificates.crt
+
         cmake --preset dev
         cmake --build build/dev --target tilem
     )
